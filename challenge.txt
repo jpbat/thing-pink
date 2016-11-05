@@ -1,0 +1,39 @@
+A aplicação X tem como objectivo criar um Feed com diversos conteúdos, semelhante a uma rede social. Estes conteúdos podem ser acessíveis por utilizadores autenticados ou não autenticados (1).
+
+O teu desafio consiste em criar uma API com os seguintes requisitos e funcionalidades:
+1. Conteúdos:
+    1.1. Utilizadores registados podem adicionar, editar e remover posts.
+    1.2. Os posts podem ser vários tipos, com propriedades diferentes. (ex.: fotos, links, texto, etc). 
+    1.3. Utilizadores registados podem consultar o seu respectivo feed (2). Os conteudos deve ser obtidos sempre através de paginação.
+    1.4. Utilizadores anónimos, podem consultar o feed com posts públicos. Os conteudos deve ser obtidos sempre através de paginação.
+2. Amigos:
+    2.1. Possibilidade de adicionar e remover amigos. Não é necessária autorização de ambas as partes.
+    2.2. Consultar a lista dos meus amigos, com paginação.
+3. Filtros (opcional):
+    3.1. Criação de um método de pesquisa de conteúdos que permita optimizar o tempo de resposta de uma pesquisa consoante critérios de pesquisa.
+
+Notas:
+(1) A autenticação deve ser feita através de username / password e de outro método de login social ao teu critério (Facebook, Twitter, Google, etc)
+(2) A definição de conteúdos visíveis no feed de um utilizador fica ao teu critério (ex.: amigos directos, indirectos, patrocinados, etc);
+
+Considerações:
+As informações dos utilizadores devem estar armazenadas numa base de dados relacional.
+Quanto ao feed, duas soluções devem ser apresentadas:
+    1. Uma versão em que os posts são armazenados exclusivamente numa base de dados relacional.
+    2. Uma versão em que os posts são armazenados numa base de dados não relacional.
+    3. A paginação/filtragem dos conteúdos estar contemplada para ambas as tipologias de base de dados.
+
+Requisitos:
+    - Serviços em protocolo de comunicação REST
+    - Formato resposta JSON
+    - Uso correcto de Status Codes
+    - Podes usar a linguagem que aches que melhor se adequa a implementação.
+    - O desafio terá que estar bem documentado.
+    - Código bem estruturado e legível.
+    - A explicação das descisões de implementação têm que ser documentadas.
+    - Os pontos opcionais no caso de não serem implementados, é valorizado uma descrição da abordagem/tecnologia que usarias. 
+
+O limite de entrega deste desafio é de 8 dias a contar da data de envio deste desafio.
+Qualquer dúvida, podes entrar em contacto com os endereços de email presentes no email.
+
+Boa sorte!
