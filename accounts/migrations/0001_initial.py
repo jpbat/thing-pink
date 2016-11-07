@@ -17,12 +17,12 @@ class Migration(migrations.Migration):
             name='User',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('password', models.CharField(max_length=128, verbose_name='password')),
+                ('name', models.CharField(max_length=128)),
+                ('username', models.CharField(max_length=32, unique=True)),
                 ('last_login', models.DateTimeField(blank=True, null=True, verbose_name='last login')),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('updated', models.DateTimeField(auto_now=True)),
-                ('name', models.CharField(max_length=128)),
-                ('username', models.CharField(max_length=32, unique=True)),
+                ('password', models.CharField(max_length=128, verbose_name='password')),
             ],
             options={
                 'verbose_name': 'User',
