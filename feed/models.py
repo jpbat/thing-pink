@@ -47,16 +47,24 @@ class Partial(Timestampable):
         ('image', 'image'),
         ('text', 'text'),
         ('video', 'video'),
-        ('post', 'post'),
     )
 
     post = models.ForeignKey(Post, related_name='partials')
     object_type = models.CharField(max_length=16, choices=TYPE_CHOICES)
+    text = models.TextField(null=True)
 
     class Meta:
         verbose_name = 'Partial'
         verbose_name_plural = 'Partials'
 
-    def __unicode__(self):
-        """Return the id."""
-        return self.id
+    @property
+    def url(self):
+        return self.attachment.file.filename
+
+
+class Attachment(Timestampable):
+
+    partial = models.OneToOneField(
+        Partial, related_name='attachment', null=True
+    )
+    file = models.FileField(upload_to='attachments/')
