@@ -24,6 +24,9 @@ class PostQuerySet(models.QuerySet):
         return self.filter(user=user)
 
     def feed_for_user(self, user):
+        if user.is_anonymous():
+            return self.public()
+
         friend_ids = (
             User.objects.friends_with(user)
             .values_list('id', flat=True)
