@@ -1,3 +1,4 @@
+from rest_framework.generics import ListAPIView
 from rest_framework.viewsets import ModelViewSet
 
 from thing_pink.api import APICommonMixin
@@ -21,3 +22,11 @@ class PostViewSet(APICommonMixin, ModelViewSet):
         if self.request.method == 'GET':
             self.permission_classes = []
         return super(PostViewSet, self).get_permissions()
+
+
+class FeedView(APICommonMixin, ListAPIView):
+
+    serializer_class = PostSerializer
+
+    def get_queryset(self):
+        return Post.objects.feed_for_user(self.request.user)

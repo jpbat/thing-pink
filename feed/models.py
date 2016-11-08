@@ -23,6 +23,13 @@ class PostQuerySet(models.QuerySet):
     def from_user(self, user):
         return self.filter(user=user)
 
+    def feed_for_user(self, user):
+        friend_ids = (
+            User.objects.friends_with(user)
+            .values_list('id', flat=True)
+        )
+        return self.filter(user_id__in=friend_ids)
+
 
 class Post(Timestampable, Visibility, Deletable):
 
