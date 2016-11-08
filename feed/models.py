@@ -20,6 +20,9 @@ class PostQuerySet(models.QuerySet):
     def public(self):
         return self.filter(visibility__iexact=Visibility.PUBLIC)
 
+    def from_user(self, user):
+        return self.filter(user=user)
+
 
 class Post(Timestampable, Visibility, Deletable):
 
