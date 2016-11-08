@@ -57,3 +57,24 @@ class User(AbstractBaseUser, Timestampable):
         self.token, _ = Token.objects.get_or_create(user=self)
         self.last_login = datetime.now()
         self.save()
+
+
+class FriendshipQuerySet(models.QuerySet):
+
+    def between(self, user1, user2):
+        return self.filter(
+            models.Q(user1=user1, user2=user2) |
+            models.Q(user1=user2, user2=user1)
+        )
+
+
+class Friendship(Timestampable):
+
+    user1 = models.ForeignKey(User, related_name='added')
+    user2 = models.ForeignKey(User, related_name='was_added_by')
+
+    objects = FriendshipQuerySet.as_manager()
+
+    def __unicode__(self):
+        """Return a combination of the names from both users."""
+        return "{} - {}".format(self.user1.name, self.user2.name)

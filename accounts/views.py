@@ -1,4 +1,5 @@
 from rest_framework import status
+from rest_framework.decorators import detail_route
 from rest_framework.generics import CreateAPIView
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
@@ -6,8 +7,11 @@ from rest_framework.viewsets import ModelViewSet
 from accounts.models import User
 from thing_pink.api import APICommonMixin
 
+from .models import Friendship
+
 from .serializers import (
-    LoginUserSerializer, RegisterUserSerializer, BaseUserSerializer
+    LoginUserSerializer, RegisterUserSerializer, BaseUserSerializer,
+    FriendshipSerializer
 )
 
 
@@ -44,3 +48,25 @@ class UserViewSet(APICommonMixin, ModelViewSet):
             return Response(status=status.HTTP_404_NOT_FOUND)
         self.perform_destroy(instance)
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+    @detail_route(methods=[u'post', u'delete'])
+    def friend(self, request, *args, **kwargs):
+        data = {
+            'user1': request.user,
+            'user2': self.get_object(),
+        }
+
+        if request.method == 'DELETE':
+            instance = Friendship.objects.between(
+                request.user, self.get_object()
+            )
+            self.perform_destroy(instance)
+            return Response(status=status.HTTP_204_NO_CONTENT)
+
+        serializer = FriendshipSerializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(
+            serializer.data, status=status.HTTP_201_CREATED, headers=headers
+        )
