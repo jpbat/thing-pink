@@ -1,4 +1,4 @@
-"""thing_pink URL Configuration
+"""thing_pink URL Configuration.
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/1.10/topics/http/urls/
@@ -17,11 +17,12 @@ from django.conf.urls import include, url
 from django.contrib import admin
 
 from accounts.urls import urlpatterns as accounts_urls
+from feed.urls import urlpatterns as feed_urls
 
 from .views import AppInfo
 
 api_urls = (
-    accounts_urls
+    accounts_urls + feed_urls
 )
 
 urlpatterns = [

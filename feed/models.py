@@ -1,22 +1,44 @@
 from __future__ import unicode_literals
 
-from accounts.models import User
-
 from django.db import models
+from django.utils import timezone
 
-from utils.models import Timestampable
+from accounts.models import User
+from utils.models import Timestampable, Visibility, Deletable
 
 
-class Post(Timestampable):
+class PostManager(models.Manager):
+
+    def get_queryset(self):
+        return super(PostManager, self).get_queryset().filter(
+            deleted__isnull=True
+        )
+
+
+class PostQuerySet(models.QuerySet):
+
+    def public(self):
+        return self.filter(visibility__iexact=Visibility.PUBLIC)
+
+
+class Post(Timestampable, Visibility, Deletable):
 
     user = models.ForeignKey(User, related_name='posts')
+
+    objects = PostManager.from_queryset(PostQuerySet)()
 
     class Meta:
         verbose_name = 'Post'
         verbose_name_plural = 'Posts'
+        ordering = ['-created']
 
     def __unicode__(self):
+        """Return the id."""
         return "{} - {}".format(self.id, self.user.name)
+
+    def delete(self):
+        self.deleted = timezone.now()
+        self.save()
 
 
 class Partial(Timestampable):
@@ -36,4 +58,5 @@ class Partial(Timestampable):
         verbose_name_plural = 'Partials'
 
     def __unicode__(self):
+        """Return the id."""
         return self.id
