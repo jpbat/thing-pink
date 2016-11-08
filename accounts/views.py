@@ -1,6 +1,6 @@
 from rest_framework import status
 from rest_framework.decorators import detail_route
-from rest_framework.generics import CreateAPIView
+from rest_framework.generics import CreateAPIView, ListAPIView
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
@@ -70,3 +70,11 @@ class UserViewSet(APICommonMixin, ModelViewSet):
         return Response(
             serializer.data, status=status.HTTP_201_CREATED, headers=headers
         )
+
+
+class FriendsView(APICommonMixin, ListAPIView):
+
+    serializer_class = BaseUserSerializer
+
+    def get_queryset(self):
+        return User.objects.friends_with(self.request.user)

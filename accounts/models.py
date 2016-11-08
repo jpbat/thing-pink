@@ -35,12 +35,27 @@ class UserManager(BaseUserManager):
                                  **extra_fields)
 
 
+class UserQuerySet(models.QuerySet):
+
+    def friends_with(self, user):
+        friend_ids = []
+
+        qs = Friendship.objects.for_user(user)
+        for friendship in qs:
+            if friendship.user1.id == user.id:
+                friend_ids.append(friendship.user2.id)
+            else:
+                friend_ids.append(friendship.user1.id)
+
+        return self.filter(id__in=friend_ids)
+
+
 class User(AbstractBaseUser, Timestampable):
 
     name = models.CharField(max_length=128)
     username = models.CharField(max_length=32, unique=True)
 
-    objects = UserManager()
+    objects = UserManager.from_queryset(UserQuerySet)()
 
     class Meta:
         verbose_name = 'User'
@@ -65,6 +80,11 @@ class FriendshipQuerySet(models.QuerySet):
         return self.filter(
             models.Q(user1=user1, user2=user2) |
             models.Q(user1=user2, user2=user1)
+        )
+
+    def for_user(self, user):
+        return self.filter(
+            models.Q(user1=user) | models.Q(user2=user)
         )
 
 
