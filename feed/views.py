@@ -13,7 +13,7 @@ class PostViewSet(APICommonMixin, ModelViewSet):
     def filter_queryset(self, queryset):
         if self.request.user.is_anonymous():
             return queryset.public()
-        if self.request.method in ['DELETE', 'PATCH']:
+        if self.request.method in ['DELETE', 'PATCH', 'PUT']:
             return queryset.from_user(self.request.user)
         return queryset
 

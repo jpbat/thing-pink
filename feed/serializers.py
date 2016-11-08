@@ -16,6 +16,12 @@ class PartialSerializer(serializers.ModelSerializer):
             'id', 'object_type', 'text', 'url'
         )
 
+    def to_internal_value(self, data):
+        instance_id = data.get('id')
+        data = super(PartialSerializer, self).to_internal_value(data)
+        data['id'] = instance_id
+        return data
+
     def create(self, validated_data):
         post = self.context['post']
         validated_data['post'] = post
@@ -54,5 +60,35 @@ class PostSerializer(serializers.ModelSerializer):
         )
         partial_serializer.is_valid()
         partial_serializer.save()
+
+        return instance
+
+    def update(self, instance, validated_data):
+        partials = validated_data.pop('partials')
+        instance = super(PostSerializer, self).update(instance, validated_data)
+
+        ctx = self.context
+        ctx['post'] = instance
+
+        partial_ids = []
+
+        for partial in partials:
+            partial_id = partial.get('id')
+            if partial_id:
+                partial_instance = Partial.objects.get(id=partial_id)
+                partial_serializer = PartialSerializer(
+                    partial_instance, data=partial, context=ctx
+                )
+            else:
+                partial_serializer = PartialSerializer(
+                    data=partial, context=ctx
+                )
+
+            partial_serializer.is_valid(raise_exception=True)
+            partial_instance = partial_serializer.save()
+            partial_ids.append(partial_instance.id)
+
+        # remove the old ugly partials
+        instance.partials.exclude(id__in=partial_ids).delete()
 
         return instance
