@@ -6,7 +6,9 @@ from rest_framework.authtoken.serializers import AuthTokenSerializer
 
 from django.contrib.auth import password_validation
 
-from .models import User, Friendship
+from utils.third_party import Facebook
+
+from .models import User, Friendship, FacebookUser
 
 
 class BaseUserSerializer(serializers.ModelSerializer):
@@ -89,3 +91,52 @@ class FriendshipSerializer(serializers.ModelSerializer):
                 'There is already a friendship between those users.'
             )
         return data
+
+
+class FacebookLoginUserSerializer(serializers.Serializer):
+
+    access_token = serializers.CharField()
+
+    def create(self, validated_data):
+        access_token = validated_data['access_token']
+
+        # try to map directly between access_token and user
+        try:
+            fb_user = FacebookUser.objects.get(access_token=access_token)
+        except FacebookUser.DoesNotExist:
+            fb_user = None
+
+        if fb_user:
+            user = fb_user.user
+            user.get_token()
+            return BaseUserSerializer(user).data
+
+        facebook_data = Facebook.get_user_info(access_token=access_token)
+
+        if facebook_data is None:
+            return {}
+
+        # check if this facebook account already exists in bd
+        try:
+            fb_user = FacebookUser.objects.get(facebook_id=facebook_data['id'])
+            fb_user.access_token = access_token
+            fb_user.save()
+        except FacebookUser.DoesNotExist:
+            fb_user = None
+
+        if fb_user:
+            user = fb_user.user
+        else:
+            user, _ = User.objects.get_or_create(
+                username=facebook_data['id'],
+                defaults={
+                    'name': facebook_data['name'],
+                }
+            )
+            FacebookUser.objects.create(
+                facebook_id=facebook_data['id'],
+                access_token=access_token,
+                user=user
+            )
+        user.get_token()
+        return BaseUserSerializer(user).data

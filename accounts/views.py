@@ -11,7 +11,7 @@ from .models import Friendship
 
 from .serializers import (
     LoginUserSerializer, RegisterUserSerializer, BaseUserSerializer,
-    FriendshipSerializer
+    FriendshipSerializer, FacebookLoginUserSerializer
 )
 
 
@@ -78,3 +78,21 @@ class FriendsView(APICommonMixin, ListAPIView):
 
     def get_queryset(self):
         return User.objects.friends_with(self.request.user)
+
+
+class FacebookLoginView(APICommonMixin, CreateAPIView):
+    serializer_class = FacebookLoginUserSerializer
+    authentication_classes = []
+    permission_classes = []
+
+    def post(self, request, format=None):
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.save()
+
+        if user:
+            return Response(user)
+        else:
+            return Response(
+                {'error': 'invalid token'}, status=status.HTTP_400_BAD_REQUEST
+            )

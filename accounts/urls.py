@@ -6,7 +6,7 @@ from rest_framework import routers
 from django.conf.urls import url
 
 from .views import (
-    LoginView, RegisterView, UserViewSet, FriendsView
+    LoginView, RegisterView, UserViewSet, FriendsView, FacebookLoginView
 )
 
 
@@ -17,4 +17,5 @@ urlpatterns = router.urls + [
     url(r'^register/$', RegisterView.as_view(), name='register'),
     url(r'^login/$', LoginView.as_view(), name='login'),
     url(r'^friends/$', FriendsView.as_view(), name='friends'),
+    url(r'^fb-login/$', FacebookLoginView.as_view(), name='fb-login'),
 ]

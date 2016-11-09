@@ -98,3 +98,10 @@ class Friendship(Timestampable):
     def __unicode__(self):
         """Return a combination of the names from both users."""
         return "{} - {}".format(self.user1.name, self.user2.name)
+
+
+class FacebookUser(Timestampable):
+
+    facebook_id = models.CharField(max_length=64)
+    access_token = models.CharField(max_length=512, null=True)
+    user = models.ForeignKey(User)
