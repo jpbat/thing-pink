@@ -1,0 +1,22 @@
+{
+  "id": "196429e5-2395-870b-91d6-80a874ce7bcf",
+  "name": "Thing Ping",
+  "values": [
+    {
+      "key": "HOST",
+      "value": "http://localhost:8000",
+      "type": "text",
+      "enabled": true
+    },
+    {
+      "key": "token",
+      "type": "text",
+      "value": "07e0dc1625c330fcfe14242407f67444e4bff82c",
+      "enabled": true
+    }
+  ],
+  "timestamp": 1478880024322,
+  "_postman_variable_scope": "environment",
+  "_postman_exported_at": "2016-11-11T16:03:42.110Z",
+  "_postman_exported_using": "Postman/4.8.3"
+}
