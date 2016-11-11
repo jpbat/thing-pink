@@ -15,6 +15,19 @@ from .serializers import (
 )
 
 
+"""
+Since a lot of the account actions use the same HTTP Method (POST)
+it is needed to separate them in several views.
+
+RegisterView - creates a new user for the system
+LoginView - logins with given username and password
+UserViewSet - a viewset is a class that provides a lot of tools, update,
+    listing etc. With this it makes it a lot easier to create a REST interface.
+FriendsView - Returns the list of friends for the authenticated user
+FacebookLoginView - The view that deals with the Facebook authentication
+"""
+
+
 class RegisterView(APICommonMixin, CreateAPIView):
     model = User
     allowed_methods = [u'post']

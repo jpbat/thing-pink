@@ -48,6 +48,11 @@ class PostSerializer(serializers.ModelSerializer):
         return validated_data
 
     def create(self, validated_data):
+        """Create and update had to be rewritten.
+
+        Since we are submitting nested instances in the body, we need
+        to specify how to deal with the nested items.
+        """
         validated_data['user'] = self.context['request'].user
         partials = validated_data.pop('partials')
 
@@ -64,6 +69,11 @@ class PostSerializer(serializers.ModelSerializer):
         return instance
 
     def update(self, instance, validated_data):
+        """Create and update had to be rewritten.
+
+        Since we are submitting nested instances in the body, we need
+        to specify how to deal with the nested items.
+        """
         partials = validated_data.pop('partials')
         instance = super(PostSerializer, self).update(instance, validated_data)
 

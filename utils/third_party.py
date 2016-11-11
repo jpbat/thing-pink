@@ -16,6 +16,7 @@ class BaseAPI(object):
 
 
 class Facebook(BaseAPI):
+    """Implements basic facebook calls."""
 
     base_url = "https://graph.facebook.com/v2.8/me/"
     parameters = {

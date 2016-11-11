@@ -1,7 +1,6 @@
 from __future__ import unicode_literals
 
 from django.db import models
-from django.utils import timezone
 
 from accounts.models import User
 from utils.models import Timestampable, Visibility, Deletable
@@ -35,6 +34,11 @@ class PostQuerySet(models.QuerySet):
 
 
 class Post(Timestampable, Visibility, Deletable):
+    """This class represents a user post.
+
+    A user post can have multiple partials from different types such as images,
+    text or even videos. Each post has a owner which is called user.
+    """
 
     user = models.ForeignKey(User, related_name='posts')
 
@@ -49,12 +53,9 @@ class Post(Timestampable, Visibility, Deletable):
         """Return the id."""
         return "{} - {}".format(self.id, self.user.name)
 
-    def delete(self):
-        self.deleted = timezone.now()
-        self.save()
-
 
 class Partial(Timestampable):
+    """This class represents each partial from a post."""
 
     TYPE_CHOICES = (
         ('image', 'image'),
@@ -76,6 +77,7 @@ class Partial(Timestampable):
 
 
 class Attachment(Timestampable):
+    """This class allows us to upload files to add to our post."""
 
     partial = models.OneToOneField(
         Partial, related_name='attachment', null=True

@@ -12,6 +12,7 @@ from utils.models import Timestampable
 
 
 class UserManager(BaseUserManager):
+    """This manager needs to be implemented, per django requisite."""
 
     def _create_user(self, username, password, is_staff, is_superuser,
                      **extra_fields):
@@ -51,6 +52,7 @@ class UserQuerySet(models.QuerySet):
 
 
 class User(AbstractBaseUser, Timestampable):
+    """This class represents the user inside the application."""
 
     name = models.CharField(max_length=128)
     username = models.CharField(max_length=32, unique=True)
@@ -89,6 +91,7 @@ class FriendshipQuerySet(models.QuerySet):
 
 
 class Friendship(Timestampable):
+    """This class represents a friendship between two users."""
 
     user1 = models.ForeignKey(User, related_name='added')
     user2 = models.ForeignKey(User, related_name='was_added_by')
@@ -101,6 +104,7 @@ class Friendship(Timestampable):
 
 
 class FacebookUser(Timestampable):
+    """This class represents a facebook profile."""
 
     facebook_id = models.CharField(max_length=64)
     access_token = models.CharField(max_length=512, null=True)

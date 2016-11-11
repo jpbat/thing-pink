@@ -12,6 +12,7 @@ from .models import User, Friendship, FacebookUser
 
 
 class BaseUserSerializer(serializers.ModelSerializer):
+    """This is the base serializer for every user action."""
 
     password = serializers.CharField(write_only=True)
     token = serializers.CharField(read_only=True)
@@ -42,6 +43,7 @@ class BaseUserSerializer(serializers.ModelSerializer):
 
 
 class RegisterUserSerializer(BaseUserSerializer):
+    """This is the serializer used to register a new account."""
 
     def create(self, validated_data):
         user = User.objects.create(
@@ -55,6 +57,7 @@ class RegisterUserSerializer(BaseUserSerializer):
 
 
 class LoginUserSerializer(AuthTokenSerializer, BaseUserSerializer):
+    """This is the serializer used to login."""
 
     name = serializers.CharField(required=False)
 
@@ -65,6 +68,7 @@ class LoginUserSerializer(AuthTokenSerializer, BaseUserSerializer):
 
 
 class FriendshipSerializer(serializers.ModelSerializer):
+    """This is the serializer used to create and list friendships."""
 
     friends_since = serializers.DateTimeField(source='created', read_only=True)
     user1 = BaseUserSerializer(read_only=True)
@@ -94,6 +98,7 @@ class FriendshipSerializer(serializers.ModelSerializer):
 
 
 class FacebookLoginUserSerializer(serializers.Serializer):
+    """This is the serializer used to login using facebook."""
 
     access_token = serializers.CharField()
 
